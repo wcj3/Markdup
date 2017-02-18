@@ -2,7 +2,9 @@ module.exports = {
     entry: ['babel-polyfill', "./src"],
     output: {
         path: "lib",
-        filename: "markdup.js"
+        filename: "markdup.js",
+        library: "Markdup",
+        libraryTarget: "var"
     },
     module: {
         rules: [{

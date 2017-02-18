@@ -1,11 +1,9 @@
 import hljs from 'highlight.js';
 import '../node_modules/highlight.js/styles/github.css';
-// TODO: Add unit tests
+
 "use strict";
 
-class Markdup {
-
-    //Declare instance variable
+export class Markdup {
 
     constructor(){
         this.mockDom = [];
@@ -123,5 +121,5 @@ class Markdup {
     }
 }
 
-const mk = new Markdup();
-mk.render();
+// const mk = new Markdup();
+// mk.render();

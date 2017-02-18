@@ -7,9 +7,10 @@
   "author": "Will Johnson",
   "license": "MIT",
   "scripts": {
-    "start": "gulp browersync | npm run build",
-    "build": "./node_modules/.bin/webpack --config webpack.babel.config.js --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp browersync | npm run webpack | npm test",
+    "webpack": "./node_modules/.bin/webpack --config webpack.babel.config.js --watch",
+    "build": "./node_modules/.bin/webpack --config webpack.babel.config.js",
+    "test": "karma start karma.conf.babel.js"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -18,8 +19,16 @@
     "babel-preset-env": "^1.1.8",
     "browser-sync": "^2.18.8",
     "css-loader": "^0.26.1",
-    "highlight.js": "^9.9.0",
     "gulp": "^3.9.1",
+    "highlight.js": "^9.9.0",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.4.1",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-benchmark": "^0.7.1",
+    "karma-benchmark-reporter": "^0.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-webpack": "^2.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1"
   }
