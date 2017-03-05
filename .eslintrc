@@ -1,0 +1,13 @@
+{
+"extends": "airbnb",
+"rules": {
+    "no-plusplus": "off",
+    "brace-style": "warn",
+    "unexpected-string-contatenation": "warn",
+},
+"env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  }
+}
