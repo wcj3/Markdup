@@ -1,6 +1,5 @@
-import hljs from 'highlight.js';
+import hljs from '../lib/highlight/highlight.pack';
 import '../node_modules/highlight.js/styles/github.css';
-// import styleModuleValues from './styles.sss.json';
 import styles from './styles.sss';
 
 
@@ -15,7 +14,6 @@ export class Init {
     this.numOfSpaces = numOfSpaces;
     this.indentLevel = 0;
     this.indentation = '';
-    this.instance = 0;
     this.innerHtmlStorage = new Map();
   }
 
@@ -30,6 +28,7 @@ export class Init {
     }
   }
 
+  // Create hidden element for copying
   createHiddenElement() {
     const input = document.createElement('textarea');
     input.setAttribute('id', 'copyText01adhza');
@@ -49,14 +48,13 @@ export class Init {
           event.srcElement.classList.toggle(styles['markdup__copy--clicked']);
         }, 500);
       }
-    })
+    });
   }
 
   copyMarkup(element) {
     document.querySelectorAll('[data-markdup-get]');
     const text = document.getElementById('copyText01adhza');
     text.value = this.innerHtmlStorage.get(element);
-    const range = document.createRange();
     text.select();
     return document.execCommand('copy');
   }

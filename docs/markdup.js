@@ -3762,7 +3762,6 @@ var Init = exports.Init = function () {
     this.numOfSpaces = numOfSpaces;
     this.indentLevel = 0;
     this.indentation = '';
-    this.instance = 0;
     this.innerHtmlStorage = new Map();
   }
 
@@ -3779,6 +3778,8 @@ var Init = exports.Init = function () {
         this.indentation = ' ';
       }
     }
+
+
   }, {
     key: 'createHiddenElement',
     value: function createHiddenElement() {
@@ -3812,7 +3813,6 @@ var Init = exports.Init = function () {
       document.querySelectorAll('[data-markdup-get]');
       var text = document.getElementById('copyText01adhza');
       text.value = this.innerHtmlStorage.get(element);
-      var range = document.createRange();
       text.select();
       return document.execCommand('copy');
     }

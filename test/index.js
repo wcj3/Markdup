@@ -1,4 +1,3 @@
-const mk = new Markdup.Init();
 const initObject = {
   mockDom: [],
   indents: [],
@@ -6,12 +5,13 @@ const initObject = {
   noClosers: ['input', 'br', 'comment', 'img', 'br', 'link', 'meta', 'col', 'area', 'base', 'track', 'wbr', 'menuitem'],
   noCustomErrors: null,
   numOfSpaces: null,
-  indentLevel: 0,
-  spaces: '',
+  indentation: '',
+  innerHtmlStorage: new Map()
 };
 
 
 describe('Markdup Instantation', () => {
+  const mk = new Markdup.Init();
   it('Can properly instantiate', () => {
     expect(mk).not.toEqual(initObject);
   });
@@ -22,6 +22,7 @@ describe('Markdup Instantation', () => {
 
 describe('Markdup functions are legit', () => {
   it('Tabs function works', () => {
+    const mk = new Markdup.Init();
     mk.indentLevel = 8;
     mk.setSpaces();
     expect(mk.manageTabs()).toMatch(/\s+/);
