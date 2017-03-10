@@ -10,6 +10,7 @@
     "start": "gulp browersync | npm run webpack",
     "webpack": "./node_modules/.bin/webpack --config webpack.babel.config.js --watch",
     "build": "./node_modules/.bin/webpack --config webpack.babel.config.js",
+    "format": "js-beautify --editorconfig  --f *.js src/*.js test/*.js lib/*.js --replace",
     "test": "karma start karma.conf.babel.js"
   },
   "devDependencies": {
@@ -25,19 +26,28 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
     "gulp": "^3.9.1",
+    "gulp-strip-comments": "^2.4.5",
     "highlight.js": "^9.9.0",
     "jasmine-core": "^2.5.2",
+    "js-beautify": "^1.6.11",
+    "json-loader": "^0.5.4",
     "karma": "^1.4.1",
     "karma-babel-preprocessor": "^6.0.1",
+    "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-webpack": "^2.0.2",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-loader": "^1.3.3",
+    "postcss-nesting": "^2.3.1",
     "style-loader": "^0.13.1",
+    "sugarss": "^0.2.0",
     "webpack": "^2.2.1"
   },
   "dependencies": {
     "benchmark": "^2.1.3",
-    "css-selector-tokenizer": "^0.7.0",
-    "highlight.js": "^9.9.0"
+    "highlight.js": "^9.9.0",
+    "postcss-scss": "^0.4.1",
+    "precss": "^1.4.0"
   }
 }

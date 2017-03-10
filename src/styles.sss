@@ -1,0 +1,44 @@
+.markdup__copy
+  background: rgb(35, 146, 249)
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  padding: 10px
+  text-align: center
+  height: 10px
+  font-family: inherit
+  width: 30px
+  color: white !important
+  border-radius: 8px
+  position: absolute
+  top: 30px
+  cursor: pointer
+  box-sizing: content-box
+  right: 15px
+  z-index: 10
+
+  &::before
+    content: ''
+    position: absolute
+    opacity: 1
+
+  &--clicked
+    &::before
+      content: ''
+      background: inherit
+      width: inherit
+      height: inherit
+      border-radius: inherit
+      padding: 10px
+      top: 0
+      position: absolute
+      transform: scale(1.5, 1.5)
+      box-sizing: inherit
+      right: 0
+      opacity: 0
+      transition: opacity .5s, transform .5s
+      z-index: -1
+
+@media (max-width: 768px)
+  .markdup__copy
+    display: none

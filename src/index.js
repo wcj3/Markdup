@@ -1,22 +1,96 @@
 import hljs from 'highlight.js';
 import '../node_modules/highlight.js/styles/github.css';
+// import styleModuleValues from './styles.sss.json';
+import styles from './styles.sss';
 
 
-export class init {
+export class Init {
 
   constructor(noCustomErrors = null, numOfSpaces = null) {
     this.mockDom = [];
     this.indents = [];
     this.domAsString = '';
-    this.noClosers = ['input', 'br', 'comment', 'img', 'br', 'link', 'meta', 'col', 'area', 'base', 'track', 'wbr', 'menuitem'];
+    this.voidElements = ['input', 'br', 'comment', 'img', 'br', 'link', 'meta', 'col', 'area', 'base', 'track', 'wbr', 'menuitem'];
     this.noCustomErrors = noCustomErrors;
     this.numOfSpaces = numOfSpaces;
+    this.indentLevel = 0;
+    this.indentation = '';
+    this.instance = 0;
+    this.innerHtmlStorage = new Map();
   }
 
-  // TODO: add clipboard JS
+  // Add amount spaces passed in from constructor, or defaults to two spaces
+  setSpaces() {
+    if (Number.isInteger(this.numOfSpaces) && this.numOfSpaces > 0) {
+      for (let s = 0; s < this.numOfSpaces; s++) {
+        this.indentation += ' ';
+      }
+    } else {
+      this.indentation = ' ';
+    }
+  }
+
+  createHiddenElement() {
+    const input = document.createElement('textarea');
+    input.setAttribute('id', 'copyText01adhza');
+    input.styles = 'display: none';
+    document.body.append(input);
+    return input;
+  }
+
+  // Attach listener for copy clicks
+  attachListener() {
+    document.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (event.target.className.includes('markdup__copy')) {
+        event.srcElement.classList.toggle(styles['markdup__copy--clicked']);
+        this.copyMarkup(event.srcElement.parentElement.dataset.markdupRender);
+        setTimeout(() => {
+          event.srcElement.classList.toggle(styles['markdup__copy--clicked']);
+        }, 500);
+      }
+    })
+  }
+
+  copyMarkup(element) {
+    document.querySelectorAll('[data-markdup-get]');
+    const text = document.getElementById('copyText01adhza');
+    text.value = this.innerHtmlStorage.get(element);
+    const range = document.createRange();
+    text.select();
+    return document.execCommand('copy');
+  }
+
+  // Create button element
+  addCopyToDom() {
+    const button = document.createElement('a');
+    button.classList.add(styles['markdup__copy']);
+    button.innerHTML = 'Copy';
+    return button;
+  }
+
+  manageTabs(type) {
+    let match;
+    let counter = 0;
+    let spacing = this.indentation;
+    if (this.indents.length === 1) {
+      this.indentLevel = 1;
+    }
+    if (type === 'close') {
+      this.indents.pop();
+      match = --this.indentLevel;
+    } else {
+      match = this.indentLevel;
+    }
+    while (counter < match) {
+      spacing += this.indentation;
+      ++counter;
+    }
+    return spacing;
+  }
 
   // Parses HTML to determine if a tag is open or closed
-  parseHTML(parsedElement, text) {
+  addToMockDom(parsedElement, text) {
     const elementInfo = new Map();
     // Parses for comment
     if (parsedElement.match(/<!--/) || parsedElement.match(/-->/)) {
@@ -28,7 +102,7 @@ export class init {
     }
     elementInfo.set('element', parsedElement);
     // Check for elements that don't have a seperate closing tag
-    if (this.noClosers.includes(elementInfo.get('elementName'))) {
+    if (this.voidElements.includes(elementInfo.get('elementName'))) {
       elementInfo.set('open', false);
     } else if (!parsedElement.includes('</')) {
       elementInfo.set('open', true);
@@ -40,99 +114,88 @@ export class init {
   }
 
   // Add dom element with tabs to string
-  appendToDom() {
+  domToString() {
     this.domAsString = '';
-    let indentLevel = 0;
-    let spaces = '';
-    // Add amount spaces passed in from constructor, or defaults to two spaces
-    if (Number.isInteger(this.numOfSpaces) && this.numOfSpaces > 0) {
-      for (let s = 0; s < this.numOfSpaces; s++) {
-        spaces += ' ';
-      }
-    } else {
-      spaces = '  ';
-    }
-    const manageTabs = (type) => {
-      let match;
-      let counter = 0;
-      let tabs = '';
-      if (this.indents.length === 1) {
-        indentLevel = 1;
-      }
-      if (type === 'close') {
-        this.indents.pop();
-        match = --indentLevel;
-      } else {
-        match = indentLevel;
-      }
-      while (counter < match) {
-        tabs += spaces;
-        counter++;
-      }
-      return tabs;
-    };
     for (let i = 0; i < this.mockDom.length - 1; ++i) {
       const currElement = this.mockDom[i].get('elementName');
       // Adds open tags
       if (this.mockDom[i].get('open')) {
         // Checks if the next element is a close tag and doesn't increase indentation
-        if (!this.mockDom[i + 1].get('open') && this.mockDom[i + 1].get('elementName') === currElement) {
-          this.domAsString += `${manageTabs()} ${this.mockDom[i].get('element')}`;
+        if (i === 0) {
+          this.domAsString += `${this.mockDom[i].get('element')}\n`;
+        } else if (!this.mockDom[i + 1].get('open') && this.mockDom[i + 1].get('elementName') === currElement) {
+          this.domAsString += `${this.manageTabs()}${this.mockDom[i].get('element')}`;
         } else {
-          this.domAsString += `${manageTabs()} ${this.mockDom[i].get('element')} \n`;
-          this.indents.push(indentLevel);
-          indentLevel++;
+          this.domAsString += `${this.manageTabs()}${this.mockDom[i].get('element')}\n`;
+          this.indents.push(this.indentLevel);
+          this.indentLevel++;
         }
       }
       // Adds closing tags
-      else if (this.noClosers.includes(this.mockDom[i].get('elementName'))) {
-        this.domAsString += `${manageTabs()}  ${this.mockDom[i].get('element')} \n`;
+      else if (this.voidElements.includes(this.mockDom[i].get('elementName'))) {
+        this.domAsString += `${this.manageTabs()}${this.mockDom[i].get('element')}\n`;
       } else if (!this.mockDom[i - 1].get('open')) {
         // Checks if the last element is closed and decreases indentation
-        this.domAsString += `${manageTabs('close')} ${this.mockDom[i].get('element')} \n`;
+        this.domAsString += `${this.manageTabs('close')}${this.mockDom[i].get('element')}\n`;
       }
       // Checks if the last element has the same name and adds innerText if available
       else {
         let innerText;
         this.mockDom[i].get('text') === undefined ? innerText = '' : innerText = this.mockDom[i].get('text');
-        this.domAsString += `${innerText}  ${this.mockDom[i].get('element')} \n`;
+        this.domAsString += `${innerText}${this.mockDom[i].get('element')}\n`;
       }
     }
     // Add last element
     this.domAsString += this.mockDom[this.mockDom.length - 1].get('element');
   }
 
+  parseHtml(originalHtml) {
+    let localHtml = originalHtml;
+    let openBracket;
+    let closeBracket;
+    while (localHtml.includes('<')) {
+      if (localHtml.trim().startsWith('<!--')) {
+        openBracket = localHtml.indexOf('<!--');
+        closeBracket = localHtml.indexOf('-->') + 2;
+      } else {
+        openBracket = localHtml.indexOf('<');
+        closeBracket = localHtml.indexOf('>');
+      }
+      let words;
+      // Checks if there is innerText following open element
+      const containsText = /^\w+/g.test(localHtml.trim().substring(0, openBracket));
+      if (containsText) {
+        words = localHtml.substring(0, openBracket).trim();
+      }
+      const parsedElem = localHtml.substring(openBracket, closeBracket + 1);
+      this.addToMockDom(parsedElem, words);
+      localHtml = localHtml.slice(closeBracket + 1);
+    }
+  }
   render() {
-    let originalHtml;
+    // Methods needed prior for all markdup elements
+    this.setSpaces();
+    this.attachListener();
+    this.createHiddenElement();
     const markdupSelectors = document.querySelectorAll('[data-markdup-get]');
     markdupSelectors.forEach((element) => {
+      this.indentLevel = 0;
+      this.indents = [];
+      // add to array to reuse in click handler
       const renderTo = element.dataset.markdupGet;
-      originalHtml = element.innerHTML.trim().toString();
-      const matchedMarkdup = document.querySelector(`[data-markdup-render=${renderTo}]`);
-      let openBracket;
-      let closeBracket;
-      // Add elements to mockDom
-      while (originalHtml.includes('<')) {
-        if (originalHtml.trim().startsWith('<!--')) {
-          openBracket = originalHtml.indexOf('<!--');
-          closeBracket = originalHtml.indexOf('-->') + 2;
-        } else {
-          openBracket = originalHtml.indexOf('<');
-          closeBracket = originalHtml.indexOf('>');
-        }
-        let words;
-        const containsText = /^\w+/g.test(originalHtml.trim().substring(0, openBracket));
-        if (containsText) {
-          words = originalHtml.substring(0, openBracket).trim();
-        }
-        const parsedElem = originalHtml.substring(openBracket, closeBracket + 1);
-        this.parseHTML(parsedElem, words);
-        originalHtml = originalHtml.slice(closeBracket + 1);
-      }
-      this.appendToDom();
+      // Get pre element with mathcing data-markdup-render attribute
+      const preElement = document.querySelector(`[data-markdup-render=${renderTo}]`);
+      preElement.style.position = 'relative';
+      this.innerHtmlStorage.set('key', renderTo);
+      const preChildren = Array.from(preElement.children);
+      const codeElement = preChildren.find(ele => ele.nodeName.toLowerCase() === 'code');
+      this.parseHtml(element.innerHTML.trim());
+      this.domToString();
       try {
-        matchedMarkdup.innerText = this.domAsString;
-        hljs.highlightBlock(matchedMarkdup);
+        codeElement.innerText = this.domAsString;
+        this.innerHtmlStorage.set(renderTo, `${this.domAsString}`);
+        preElement.prepend(this.addCopyToDom());
+        hljs.highlightBlock(codeElement);
       } catch (e) {
         if (e instanceof TypeError && !this.noCustomErrors) {
           console.log('Looks like you may have attached an null/undefined value to data-markdup-render. Make sure data-markdup-render matches data-markdup-get.');
