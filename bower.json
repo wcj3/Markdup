@@ -1,0 +1,28 @@
+{
+  "name": "markdup",
+  "description": "A programmatic way to display HTML markdup",
+  "keywords": [
+    "markdup",
+    "markdup",
+    "library",
+    "css"
+  ],
+  "authors": [
+    "Will Johnson <william.c.johnson92@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+      "docs",
+      "tmp",
+      "node_modules",
+      "*.js",
+      "test",
+      "src",
+      "*.json",
+      "yarn.lock",
+      ".editorconfig",
+      ".eslintrc",
+      ".babelrc",
+      ".gitignore"
+  ]
+}

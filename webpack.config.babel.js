@@ -4,7 +4,7 @@ module.exports = {
     path: 'tmp',
     filename: 'markdup.js',
     library: 'Markdup',
-    libraryTarget: 'var',
+    libraryTarget: 'umd',
   },
   module: {
     rules: [{

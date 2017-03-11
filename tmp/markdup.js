@@ -1,5 +1,14 @@
-var Markdup =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["Markdup"] = factory();
+	else
+		root["Markdup"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -10106,3 +10115,4 @@ module.exports = __webpack_require__(117);
 
 /***/ })
 /******/ ]);
+});

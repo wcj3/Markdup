@@ -15,6 +15,7 @@ describe('Markdup Instantation', () => {
   it('Can properly instantiate', () => {
     expect(mk).not.toEqual(initObject);
   });
+
   it('Has valid properties', () => {
     expect(Object.keys(mk).length).toBeGreaterThan(1);
   });
