@@ -1,9 +1,12 @@
 {
-  "name": "Markdup",
+  "name": "markdup",
   "version": "0.1.0",
-  "description": "Copies your html structure to a documentation ready format",
+  "description": "A programmatic way to display HTML markdup",
   "main": "index.js",
-  "repository": {},
+  "repository": {
+      "type": "git",
+      "url": "git+https://github.com/wcj3/Markdup.git"
+  },
   "author": "Will Johnson",
   "license": "MIT",
   "scripts": {
@@ -11,7 +14,7 @@
     "serve:github": "gulp browersync-github",
     "webpack": "./node_modules/.bin/webpack --config webpack.config.babel.js --watch",
     "build": "./node_modules/.bin/webpack --config webpack.prod.config.babel.js --optimize-minimize -p && gulp mover",
-    "format": "js-beautify --editorconfig  --f *.js src/*.js test/*.js lib/*.js --replace",
+    "format": "js-beautify --editorconfig  --f *.js src/*.js test/*.js --replace",
     "test": "karma start karma.conf.babel.js"
   },
   "devDependencies": {
