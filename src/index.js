@@ -1,4 +1,4 @@
-import hljs from '../lib/highlight/highlight.pack';
+import hljs from './highlight/highlight.pack';
 import '../node_modules/highlight.js/styles/github.css';
 import styles from './styles.sss';
 
