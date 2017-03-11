@@ -25,6 +25,7 @@
       ".eslintrc",
       ".babelrc",
       ".npmignore",
-      ".gitignore"
+      ".gitignore",
+      "future-release-notes.txt"
   ]
 }

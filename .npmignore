@@ -11,3 +11,4 @@ node_modules
 yarn.lock
 .babelrc
 .gitignore
+future-release-notes.txt
