@@ -1,6 +1,6 @@
 {
   "name": "markdup",
-  "version": "0.1.3-beta",
+  "version": "0.1.5-beta",
   "description": "A programmatic way to display HTML markdup",
   "main": "lib/markdup.min.js",
   "repository": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.1.8",
     "browser-sync": "^2.18.8",
@@ -42,7 +43,6 @@
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
-    "karma-webpack": "^2.0.2",
     "postcss-cssnext": "^2.9.0",
     "postcss-loader": "^1.3.3",
     "postcss-nesting": "^2.3.1",

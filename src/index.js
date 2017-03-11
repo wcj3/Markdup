@@ -1,10 +1,9 @@
 import hljs from 'highlight.js';
 import styles from './styles.sss';
 
+ export default class {
 
-export class Init {
-
-  constructor(noCustomErrors = null, numOfSpaces = null) {
+  constructor(hljs, noCustomErrors = null, numOfSpaces = null) {
     this.mockDom = [];
     this.indents = [];
     this.domAsString = '';
@@ -14,7 +13,7 @@ export class Init {
     this.indentLevel = 0;
     this.indentation = '';
     this.innerHtmlStorage = new Map();
-    this.hljs = hljs === undefined ? window.hljs : hljs;
+    this.hljs = hljs;
   }
 
   // Add amount spaces passed in from constructor, or defaults to two spaces
@@ -24,7 +23,7 @@ export class Init {
         this.indentation += ' ';
       }
     } else {
-      this.indentation = ' ';
+      this.indentation = '  ';
     }
   }
 

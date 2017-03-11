@@ -3774,7 +3774,6 @@ define(String.prototype, "padRight", "".padEnd);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Init = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3790,12 +3789,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Init = exports.Init = function () {
-  function Init() {
-    var noCustomErrors = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-    var numOfSpaces = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+var _class = function () {
+  function _class(hljs) {
+    var noCustomErrors = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var numOfSpaces = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    _classCallCheck(this, Init);
+    _classCallCheck(this, _class);
 
     this.mockDom = [];
     this.indents = [];
@@ -3806,13 +3805,13 @@ var Init = exports.Init = function () {
     this.indentLevel = 0;
     this.indentation = '';
     this.innerHtmlStorage = new Map();
-    this.hljs = _highlight2.default === undefined ? window.hljs : _highlight2.default;
+    this.hljs = hljs;
   }
 
   // Add amount spaces passed in from constructor, or defaults to two spaces
 
 
-  _createClass(Init, [{
+  _createClass(_class, [{
     key: 'setSpaces',
     value: function setSpaces() {
       if (Number.isInteger(this.numOfSpaces) && this.numOfSpaces > 0) {
@@ -3820,7 +3819,7 @@ var Init = exports.Init = function () {
           this.indentation += ' ';
         }
       } else {
-        this.indentation = ' ';
+        this.indentation = '  ';
       }
     }
 
@@ -4026,8 +4025,11 @@ var Init = exports.Init = function () {
     }
   }]);
 
-  return Init;
+  return _class;
 }();
+
+exports.default = _class;
+module.exports = exports['default'];
 
 /***/ }),
 /* 116 */

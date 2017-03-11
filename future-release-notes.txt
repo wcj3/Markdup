@@ -1,0 +1,2 @@
+- Add lodash
+- Add stronger test coverage
