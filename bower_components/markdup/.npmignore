@@ -1,0 +1,13 @@
+docs
+test
+src
+tmp
+node_modules
+.babelrc
+*.js
+*.json
+.eslintrc
+.editorconfig
+yarn.lock
+.babelrc
+.gitignore

@@ -15,17 +15,14 @@
       "docs",
       "tmp",
       "node_modules",
-      "*.babel.js",
-      "*.config.js",
+      "*.js",
       "test",
       "src",
-      "bower.json",
-      "package.json",
+      "*.json",
       "yarn.lock",
       ".editorconfig",
       ".eslintrc",
       ".babelrc",
-      ".npmignore",
       ".gitignore"
   ]
 }
