@@ -1,6 +1,6 @@
 {
   "name": "markdup",
-  "version": "0.1.5-beta",
+  "version": "1.0.0-beta",
   "description": "A programmatic way to display HTML markdup",
   "main": "lib/markdup.min.js",
   "repository": {
