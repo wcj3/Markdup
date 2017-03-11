@@ -1,20 +1,32 @@
 import gulp from 'gulp';
 import browserSync from 'browser-sync';
 import size from 'gulp-size';
-import strip from 'gulp-strip-comments';
 
 
-gulp.task('browersync', () => {
+gulp.task('browsersync', () => {
   browserSync({
     notify: false,
-    files: ['docs/index.html'],
+    files: ['tmp/index.html'],
     port: 1234,
+    server: {
+      baseDir: ['tmp'],
+    },
+    browser: 'google chrome',
+  });
+  gulp.watch('tmp/markdup.min.js', [browserSync.reload]);
+});
+
+gulp.task('browersync-github', () => {
+  browserSync({
+    notify: false,
+    files: ['lib/index.html'],
+    port: 4040,
     server: {
       baseDir: ['docs'],
     },
     browser: 'google chrome',
   });
-  gulp.watch('lib/markdup.min.js', ['mover', browserSync.reload]);
+  gulp.watch('lib/markdup.min.js', [browserSync.reload]);
 });
 
 gulp.task('mover', () => {

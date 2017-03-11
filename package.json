@@ -7,7 +7,8 @@
   "author": "Will Johnson",
   "license": "MIT",
   "scripts": {
-    "start": "gulp browersync | npm run webpack",
+    "start": "gulp browsersync | npm run webpack",
+    "serve:github": "gulp browersync-github",
     "webpack": "./node_modules/.bin/webpack --config webpack.config.babel.js --watch",
     "build": "./node_modules/.bin/webpack --config webpack.prod.config.babel.js --optimize-minimize -p && gulp mover",
     "format": "js-beautify --editorconfig  --f *.js src/*.js test/*.js lib/*.js --replace",
