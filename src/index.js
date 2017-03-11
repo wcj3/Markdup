@@ -1,5 +1,4 @@
-import hljs from './highlight/highlight.pack';
-import '../node_modules/highlight.js/styles/github.css';
+import hljs from 'highlight.js';
 import styles from './styles.sss';
 
 
@@ -15,6 +14,7 @@ export class Init {
     this.indentLevel = 0;
     this.indentation = '';
     this.innerHtmlStorage = new Map();
+    this.hljs = hljs === undefined ? window.hljs : hljs;
   }
 
   // Add amount spaces passed in from constructor, or defaults to two spaces
@@ -170,6 +170,7 @@ export class Init {
       localHtml = localHtml.slice(closeBracket + 1);
     }
   }
+
   render() {
     // Methods needed prior for all markdup elements
     this.setSpaces();
@@ -193,7 +194,7 @@ export class Init {
         codeElement.innerText = this.domAsString;
         this.innerHtmlStorage.set(renderTo, `${this.domAsString}`);
         preElement.prepend(this.addCopyToDom());
-        hljs.highlightBlock(codeElement);
+        this.hljs.highlightBlock(codeElement);
       } catch (e) {
         if (e instanceof TypeError && !this.noCustomErrors) {
           console.log('Looks like you may have attached an null/undefined value to data-markdup-render. Make sure data-markdup-render matches data-markdup-get.');

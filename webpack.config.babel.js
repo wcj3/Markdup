@@ -1,5 +1,12 @@
 module.exports = {
   entry: ['babel-polyfill', './src'],
+  externals: {
+    'highlight.js': {
+      commonjs: 'highlight.js',
+      commonjs2: 'highlight.js',
+      amd: 'highlight.js',
+    }
+  },
   output: {
     path: 'tmp',
     filename: 'markdup.js',
