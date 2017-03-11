@@ -5,7 +5,7 @@ module.exports = {
     path: 'lib',
     filename: 'markdup.min.js',
     library: 'Markdup',
-    libraryTarget: 'var',
+    libraryTarget: 'umd',
   },
   module: {
     rules: [{
