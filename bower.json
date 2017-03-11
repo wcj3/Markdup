@@ -19,7 +19,6 @@
       "*.config.js",
       "test",
       "src",
-      "bower.json",
       "package.json",
       "yarn.lock",
       ".editorconfig",
