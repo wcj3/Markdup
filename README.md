@@ -35,7 +35,7 @@ The key attributes are data-markdup-get & data-markdup-render
   </div>
 </section>
 <pre class="html" data-markdup-render="copy1">
-	  <code></code>
+  <code></code>
 </pre>
 ```
 
@@ -56,7 +56,7 @@ const mk = new Markdup(hljs);
 mk.render();
 
 // ES6 imports
-
+import hljs from 'highlight.js';
 import Markdup from '../Markdup/tmp/markdup';
 const mk = new Markdup(hljs);
 mk.render();
