@@ -9,7 +9,7 @@ module.exports = {
     }
   },
   output: {
-    path: __dirname + 'lib',
+    path: __dirname + '/lib',
     filename: 'markdup.min.js',
     library: 'Markdup',
     libraryTarget: 'umd',
