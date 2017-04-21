@@ -37,7 +37,7 @@ The key attributes are data-markdup-get & data-markdup-render
   </div>
 </section>
 <pre class="html" data-markdup-render="copy1">
-	  <code></code>
+  <code></code>
 </pre>
 ```
 
