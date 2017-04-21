@@ -8,7 +8,7 @@ module.exports = {
     }
   },
   output: {
-    path: 'tmp',
+    path: __dirname + './tmp',
     filename: 'markdup.js',
     library: 'Markdup',
     libraryTarget: 'umd',

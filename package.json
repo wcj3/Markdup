@@ -1,6 +1,6 @@
 {
   "name": "markdup",
-  "version": "1.0.0-beta",
+  "version": "1.0.2-beta",
   "description": "A programmatic way to display HTML markdup",
   "main": "lib/markdup.min.js",
   "repository": {
@@ -12,8 +12,8 @@
   "scripts": {
     "start": "gulp browsersync | npm run webpack",
     "serve:github": "gulp browersync-github",
-    "webpack": "./node_modules/.bin/webpack --config webpack.config.babel.js --watch",
-    "build": "./node_modules/.bin/webpack --config webpack.prod.config.babel.js --optimize-minimize -p && gulp mover",
+    "webpack": "webpack --config webpack.config.babel.js --watch",
+    "build": "webpack --config webpack.prod.config.babel.js --optimize-minimize -p && gulp mover",
     "format": "js-beautify --editorconfig  --f *.js src/*.js test/*.js --replace",
     "test": "karma start karma.conf.babel.js"
   },
@@ -23,14 +23,17 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.1.8",
+    "babel-preset-flow": "^6.23.0",
     "browser-sync": "^2.18.8",
     "css-loader": "^0.26.2",
     "cssnano": "^3.10.0",
     "eslint": "^3.17.0",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-flowtype": "^2.32.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
+    "flow-bin": "^0.44.2",
     "gulp": "^3.9.1",
     "gulp-size": "^2.1.0",
     "gulp-strip-comments": "^2.4.5",

@@ -11,7 +11,7 @@ const initObject = {
 
 
 describe('Markdup Instantation', () => {
-  const mk = new Markdup.Init();
+  const mk = new Markdup();
   it('Can properly instantiate', () => {
     expect(mk).not.toEqual(initObject);
   });
@@ -21,16 +21,16 @@ describe('Markdup Instantation', () => {
   });
 });
 
-describe('Markdup functions are legit', () => {
+describe('Markdup functions work as expected', () => {
   it('Tabs function works', () => {
-    const mk = new Markdup.Init();
+    const mk = new Markdup;
     mk.indentLevel = 8;
     mk.setSpaces();
     expect(mk.manageTabs()).toMatch(/\s+/);
   });
 });
 
-describe('DOM access is too legit', () => {
+describe('Markdup DOM access', () => {
   it('Can access DOM through Karma', () => {
     expect(window.__html__['docs/index.html']).toBeDefined();
   })

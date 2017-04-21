@@ -13,6 +13,8 @@ https://wcj3.github.io/Markdup/
 
 Simply wrap your markup in a div or section element and set the following data-attributes. Oh yeah, and make sure to have Highlight.js available.
 
+*Libraries like React or Angular may strip out certain attributes before Markdup can process*
+
 The key attributes are data-markdup-get & data-markdup-render
 
 ```html
@@ -72,4 +74,3 @@ Markdup(hljs, noCustomErrors, numOfSpaces)
 | `hljs:Object` | Highlight.js object required  |
 | `nuCustomErrors:Boolean` | Turns off Markdup errors and relies on browser warning   |
 | `numOfSpaces:Number` | Sets number of spaces for identation. Default is 2   |
-

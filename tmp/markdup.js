@@ -3775,8 +3775,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _highlight = __webpack_require__(304);
 
 var _highlight2 = _interopRequireDefault(_highlight);
@@ -3789,246 +3787,222 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _class = function () {
-  function _class(hljs) {
-    var noCustomErrors = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    var numOfSpaces = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+var Markdup =
+// function properties
 
-    _classCallCheck(this, _class);
+// class properties
+function Markdup(hljs) {
+  var noCustomErrors = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var numOfSpaces = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    this.mockDom = [];
-    this.indents = [];
-    this.domAsString = '';
-    this.voidElements = ['input', 'br', 'comment', 'img', 'br', 'link', 'meta', 'col', 'area', 'base', 'track', 'wbr', 'menuitem'];
-    this.noCustomErrors = noCustomErrors;
-    this.numOfSpaces = numOfSpaces;
-    this.indentLevel = 0;
-    this.indentation = '';
-    this.innerHtmlStorage = new Map();
-    this.hljs = hljs;
+  _classCallCheck(this, Markdup);
+
+  this.mockDom = [];
+  this.indents = [];
+  this.domAsString = '';
+  this.voidElements = ['input', 'br', 'comment', 'img', 'br', 'link', 'meta', 'col', 'area', 'base', 'track', 'wbr', 'menuitem'];
+  this.noCustomErrors = noCustomErrors;
+  this.numOfSpaces = numOfSpaces;
+  this.indentLevel = 0;
+  this.indentation = '';
+  this.innerHtmlStorage = new Map();
+  this.hljs = hljs;
+};
+
+// Add amount spaces passed in from constructor, or defaults to two spaces
+
+
+Markdup.prototype.setSpaces = function () {
+  if (Number.isInteger(this.numOfSpaces) && this.numOfSpaces > 0) {
+    for (var s = 0; s < this.numOfSpaces; s++) {
+      this.indentation += ' ';
+    }
+  } else {
+    this.indentation = '  ';
   }
+};
 
-  // Add amount spaces passed in from constructor, or defaults to two spaces
+// Create hidden element for copying
+Markdup.prototype.createHiddenElement = function () {
+  var input = document.createElement('textarea');
+  input.setAttribute('id', 'copyText01adhza');
+  input.styles = 'display: none';
+  document.body.append(input);
+  return input;
+};
 
+// Attach listener for copy clicks
+Markdup.prototype.attachListener = function () {
+  var _this = this;
 
-  _createClass(_class, [{
-    key: 'setSpaces',
-    value: function setSpaces() {
-      if (Number.isInteger(this.numOfSpaces) && this.numOfSpaces > 0) {
-        for (var s = 0; s < this.numOfSpaces; s++) {
-          this.indentation += ' ';
-        }
+  document.addEventListener('click', function (event) {
+    event.preventDefault();
+    if (event.target.className.includes('markdup__copy')) {
+      event.srcElement.classList.toggle(_styles2.default['markdup__copy--clicked']);
+      _this.copyMarkup(event.srcElement.parentElement.dataset.markdupRender);
+      setTimeout(function () {
+        event.srcElement.classList.toggle(_styles2.default['markdup__copy--clicked']);
+      }, 500);
+    }
+  });
+};
+
+Markdup.prototype.copyMarkup = function (element) {
+  document.querySelectorAll('[data-markdup-get]');
+  var text = document.getElementById('copyText01adhza');
+  text.value = this.innerHtmlStorage.get(element);
+  text.select();
+  return document.execCommand('copy');
+};
+
+// Create button element
+Markdup.prototype.addCopyToDom = function () {
+  var button = document.createElement('a');
+  button.classList.add(_styles2.default['markdup__copy']);
+  button.innerHTML = 'Copy';
+  return button;
+};
+
+Markdup.prototype.manageTabs = function (type) {
+  var match = void 0;
+  var counter = 0;
+  var spacing = this.indentation;
+  if (this.indents.length === 1) {
+    this.indentLevel = 1;
+  }
+  if (type === 'close') {
+    this.indents.pop();
+    match = --this.indentLevel;
+  } else {
+    match = this.indentLevel;
+  }
+  while (counter < match) {
+    spacing += this.indentation;
+    ++counter;
+  }
+  return spacing;
+};
+
+// Parses HTML to determine if a tag is open or closed
+Markdup.prototype.addToMockDom = function (parsedElement, text) {
+  var elementInfo = new Map();
+  // Parses for comment
+  if (parsedElement.match(/<!--/) || parsedElement.match(/-->/)) {
+    elementInfo.set('elementName', 'comment');
+  } else {
+    // Sets name of elementInfo etc. div, p, span
+    elementInfo.set('elementName', parsedElement.match(/[a-z]+/g)[0]);
+  }
+  elementInfo.set('element', parsedElement);
+  // Check for elements that don't have a seperate closing tag
+  if (this.voidElements.includes(elementInfo.get('elementName'))) {
+    elementInfo.set('open', false);
+  } else if (!parsedElement.includes('</')) {
+    elementInfo.set('open', true);
+  } else {
+    elementInfo.set('open', false);
+    elementInfo.set('text', text);
+  }
+  this.mockDom.push(elementInfo);
+};
+
+// Add dom element with tabs to string
+Markdup.prototype.domToString = function () {
+  this.domAsString = '';
+  for (var i = 0; i < this.mockDom.length - 1; ++i) {
+    var currElement = this.mockDom[i].get('elementName');
+    // Adds open tags
+    if (this.mockDom[i].get('open')) {
+      // Checks if the next element is a close tag and doesn't increase indentation
+      if (i === 0) {
+        this.domAsString += this.mockDom[i].get('element') + '\n';
+      } else if (!this.mockDom[i + 1].get('open') && this.mockDom[i + 1].get('elementName') === currElement) {
+        this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element');
       } else {
-        this.indentation = '  ';
+        this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element') + '\n';
+        this.indents.push(this.indentLevel);
+        this.indentLevel++;
+      }
+    } else if (this.voidElements.includes(this.mockDom[i].get('elementName'))) {
+      // Adds closing tags
+      this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element') + '\n';
+    } else if (!this.mockDom[i - 1].get('open')) {
+      // Checks if the last element is closed and decreases indentation
+      this.domAsString += '' + this.manageTabs('close') + this.mockDom[i].get('element') + '\n';
+    } else {
+      // Checks if the last element has the same name and adds innerText if available
+      var innerText = void 0;
+      this.mockDom[i].get('text') === undefined ? innerText = '' : innerText = this.mockDom[i].get('text');
+      this.domAsString += '' + innerText + this.mockDom[i].get('element') + '\n';
+    }
+  }
+  // Add last element
+  this.domAsString += this.mockDom[this.mockDom.length - 1].get('element');
+};
+
+Markdup.prototype.parseHtml = function (originalHtml) {
+  var localHtml = originalHtml;
+  var openBracket = void 0;
+  var closeBracket = void 0;
+  while (localHtml.includes('<')) {
+    if (localHtml.trim().startsWith('<!--')) {
+      openBracket = localHtml.indexOf('<!--');
+      closeBracket = localHtml.indexOf('-->') + 2;
+    } else {
+      openBracket = localHtml.indexOf('<');
+      closeBracket = localHtml.indexOf('>');
+    }
+    var words = void 0;
+    // Checks if there is innerText following open element
+    var containsText = /^\w+/g.test(localHtml.trim().substring(0, openBracket));
+    if (containsText) {
+      words = localHtml.substring(0, openBracket).trim();
+    }
+    var parsedElem = localHtml.substring(openBracket, closeBracket + 1);
+    this.addToMockDom(parsedElem, words);
+    localHtml = localHtml.slice(closeBracket + 1);
+  }
+};
+
+Markdup.prototype.render = function () {
+  var _this2 = this;
+
+  // Methods needed prior for all markdup elements
+  // this is not access until methods are created
+  this.setSpaces();
+  this.attachListener();
+  this.createHiddenElement();
+  var markdupSelectors = document.querySelectorAll('[data-markdup-get]');
+  markdupSelectors.forEach(function (element) {
+    _this2.indentLevel = 0;
+    _this2.indents = [];
+    // add to array to reuse in click handler
+    var renderTo = element.dataset.markdupGet;
+    // Get pre element with mathcing data-markdup-render attribute
+    var preElement = document.querySelector('[data-markdup-render=' + renderTo + ']');
+    preElement.style.position = 'relative';
+    _this2.innerHtmlStorage.set('key', renderTo);
+    var preChildren = Array.from(preElement.children);
+    var codeElement = preChildren.find(function (ele) {
+      return ele.nodeName.toLowerCase() === 'code';
+    });
+    _this2.parseHtml(element.innerHTML.trim());
+    _this2.domToString();
+    try {
+      codeElement.innerText = _this2.domAsString;
+      _this2.innerHtmlStorage.set(renderTo, '' + _this2.domAsString);
+      preElement.prepend(_this2.addCopyToDom());
+      _this2.hljs.highlightBlock(codeElement);
+    } catch (e) {
+      if (e instanceof TypeError && !_this2.noCustomErrors) {
+        console.log('Looks like you may have attached an null/undefined value to data-markdup-render. Make sure data-markdup-render matches data-markdup-get.');
+        console.log(e);
       }
     }
+  });
+};
 
-    // Create hidden element for copying
-
-  }, {
-    key: 'createHiddenElement',
-    value: function createHiddenElement() {
-      var input = document.createElement('textarea');
-      input.setAttribute('id', 'copyText01adhza');
-      input.styles = 'display: none';
-      document.body.append(input);
-      return input;
-    }
-
-    // Attach listener for copy clicks
-
-  }, {
-    key: 'attachListener',
-    value: function attachListener() {
-      var _this = this;
-
-      document.addEventListener('click', function (event) {
-        event.preventDefault();
-        if (event.target.className.includes('markdup__copy')) {
-          event.srcElement.classList.toggle(_styles2.default['markdup__copy--clicked']);
-          _this.copyMarkup(event.srcElement.parentElement.dataset.markdupRender);
-          setTimeout(function () {
-            event.srcElement.classList.toggle(_styles2.default['markdup__copy--clicked']);
-          }, 500);
-        }
-      });
-    }
-  }, {
-    key: 'copyMarkup',
-    value: function copyMarkup(element) {
-      document.querySelectorAll('[data-markdup-get]');
-      var text = document.getElementById('copyText01adhza');
-      text.value = this.innerHtmlStorage.get(element);
-      text.select();
-      return document.execCommand('copy');
-    }
-
-    // Create button element
-
-  }, {
-    key: 'addCopyToDom',
-    value: function addCopyToDom() {
-      var button = document.createElement('a');
-      button.classList.add(_styles2.default['markdup__copy']);
-      button.innerHTML = 'Copy';
-      return button;
-    }
-  }, {
-    key: 'manageTabs',
-    value: function manageTabs(type) {
-      var match = void 0;
-      var counter = 0;
-      var spacing = this.indentation;
-      if (this.indents.length === 1) {
-        this.indentLevel = 1;
-      }
-      if (type === 'close') {
-        this.indents.pop();
-        match = --this.indentLevel;
-      } else {
-        match = this.indentLevel;
-      }
-      while (counter < match) {
-        spacing += this.indentation;
-        ++counter;
-      }
-      return spacing;
-    }
-
-    // Parses HTML to determine if a tag is open or closed
-
-  }, {
-    key: 'addToMockDom',
-    value: function addToMockDom(parsedElement, text) {
-      var elementInfo = new Map();
-      // Parses for comment
-      if (parsedElement.match(/<!--/) || parsedElement.match(/-->/)) {
-        elementInfo.set('elementName', 'comment');
-      }
-      // Sets name of elementInfo etc. div, p, span
-      else {
-          elementInfo.set('elementName', parsedElement.match(/[a-z]+/g)[0]);
-        }
-      elementInfo.set('element', parsedElement);
-      // Check for elements that don't have a seperate closing tag
-      if (this.voidElements.includes(elementInfo.get('elementName'))) {
-        elementInfo.set('open', false);
-      } else if (!parsedElement.includes('</')) {
-        elementInfo.set('open', true);
-      } else {
-        elementInfo.set('open', false);
-        elementInfo.set('text', text);
-      }
-      this.mockDom.push(elementInfo);
-    }
-
-    // Add dom element with tabs to string
-
-  }, {
-    key: 'domToString',
-    value: function domToString() {
-      this.domAsString = '';
-      for (var i = 0; i < this.mockDom.length - 1; ++i) {
-        var currElement = this.mockDom[i].get('elementName');
-        // Adds open tags
-        if (this.mockDom[i].get('open')) {
-          // Checks if the next element is a close tag and doesn't increase indentation
-          if (i === 0) {
-            this.domAsString += this.mockDom[i].get('element') + '\n';
-          } else if (!this.mockDom[i + 1].get('open') && this.mockDom[i + 1].get('elementName') === currElement) {
-            this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element');
-          } else {
-            this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element') + '\n';
-            this.indents.push(this.indentLevel);
-            this.indentLevel++;
-          }
-        }
-        // Adds closing tags
-        else if (this.voidElements.includes(this.mockDom[i].get('elementName'))) {
-            this.domAsString += '' + this.manageTabs() + this.mockDom[i].get('element') + '\n';
-          } else if (!this.mockDom[i - 1].get('open')) {
-            // Checks if the last element is closed and decreases indentation
-            this.domAsString += '' + this.manageTabs('close') + this.mockDom[i].get('element') + '\n';
-          }
-          // Checks if the last element has the same name and adds innerText if available
-          else {
-              var innerText = void 0;
-              this.mockDom[i].get('text') === undefined ? innerText = '' : innerText = this.mockDom[i].get('text');
-              this.domAsString += '' + innerText + this.mockDom[i].get('element') + '\n';
-            }
-      }
-      // Add last element
-      this.domAsString += this.mockDom[this.mockDom.length - 1].get('element');
-    }
-  }, {
-    key: 'parseHtml',
-    value: function parseHtml(originalHtml) {
-      var localHtml = originalHtml;
-      var openBracket = void 0;
-      var closeBracket = void 0;
-      while (localHtml.includes('<')) {
-        if (localHtml.trim().startsWith('<!--')) {
-          openBracket = localHtml.indexOf('<!--');
-          closeBracket = localHtml.indexOf('-->') + 2;
-        } else {
-          openBracket = localHtml.indexOf('<');
-          closeBracket = localHtml.indexOf('>');
-        }
-        var words = void 0;
-        // Checks if there is innerText following open element
-        var containsText = /^\w+/g.test(localHtml.trim().substring(0, openBracket));
-        if (containsText) {
-          words = localHtml.substring(0, openBracket).trim();
-        }
-        var parsedElem = localHtml.substring(openBracket, closeBracket + 1);
-        this.addToMockDom(parsedElem, words);
-        localHtml = localHtml.slice(closeBracket + 1);
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      // Methods needed prior for all markdup elements
-      this.setSpaces();
-      this.attachListener();
-      this.createHiddenElement();
-      var markdupSelectors = document.querySelectorAll('[data-markdup-get]');
-      markdupSelectors.forEach(function (element) {
-        _this2.indentLevel = 0;
-        _this2.indents = [];
-        // add to array to reuse in click handler
-        var renderTo = element.dataset.markdupGet;
-        // Get pre element with mathcing data-markdup-render attribute
-        var preElement = document.querySelector('[data-markdup-render=' + renderTo + ']');
-        preElement.style.position = 'relative';
-        _this2.innerHtmlStorage.set('key', renderTo);
-        var preChildren = Array.from(preElement.children);
-        var codeElement = preChildren.find(function (ele) {
-          return ele.nodeName.toLowerCase() === 'code';
-        });
-        _this2.parseHtml(element.innerHTML.trim());
-        _this2.domToString();
-        try {
-          codeElement.innerText = _this2.domAsString;
-          _this2.innerHtmlStorage.set(renderTo, '' + _this2.domAsString);
-          preElement.prepend(_this2.addCopyToDom());
-          _this2.hljs.highlightBlock(codeElement);
-        } catch (e) {
-          if (e instanceof TypeError && !_this2.noCustomErrors) {
-            console.log('Looks like you may have attached an null/undefined value to data-markdup-render. Make sure data-markdup-render matches data-markdup-get.');
-            console.log(e);
-          }
-        }
-      });
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
+exports.default = Markdup;
 module.exports = exports['default'];
 
 /***/ }),

@@ -1,5 +1,5 @@
 {
-"extends": "airbnb",
+"extends": ["airbnb","plugin:flowtype/recommended"],
 "rules": {
     "no-plusplus": "off",
     "brace-style": "warn",
@@ -10,5 +10,8 @@
     "browser": true,
     "node": true,
     "jasmine": true
-  }
+  },
+  "plugins": [
+  "flowtype"
+  ]
 }
